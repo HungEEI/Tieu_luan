@@ -16,4 +16,5 @@ public class ThongTinService {
 		return thongTinDao.getAllThong_tins();
 	}
 	
+	
 }

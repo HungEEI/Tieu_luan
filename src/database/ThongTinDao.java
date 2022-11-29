@@ -1,5 +1,8 @@
 package database;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,14 +37,14 @@ public class ThongTinDao {
 				tt.setHinhThuc(rs.getString(6));
 				tt.setThoiLuong(rs.getString(7));
 				tt.setNgay(rs.getDate(8));
-				tt.setGioThi(rs.getTime(9));
+				tt.setGioThi(rs.getString(9));
 				tt.setPhong(rs.getString(10));
 				tt.setLop(rs.getString(11));
-				tt.setNhom(rs.getString(12));
 				
 				thong_tins.add(tt);
 				
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

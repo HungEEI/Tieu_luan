@@ -4,29 +4,52 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Desktop;
+
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import controller.ThongTinController;
 import database.ThongTinService;
+import database.XuatExcel;
 import model.Thong_tin;
 import model.thongTinModel;
 
 import javax.swing.JToolBar;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+
 
 public class MainView extends JFrame {
 
@@ -35,12 +58,15 @@ public class MainView extends JFrame {
 	private JButton btn_load;
 	
 	ThongTinService thongTinService;
-
+	private JButton btn_chon_phong;
+	private JButton btn_lich;
+	private JButton btn_xuat_file;
+	private JButton btn_time;
+	
 	public MainView() {
 		
 		init();
 		thongTinService = new ThongTinService();
-		
 	}
 	
 	public void init() {
@@ -103,7 +129,7 @@ public class MainView extends JFrame {
 		panel_3.setLayout(null);
 		
 		JToolBar toolBar_1 = new JToolBar();
-		toolBar_1.setBounds(0, 0, 859, 84);
+		toolBar_1.setBounds(0, 0, 729, 84);
 		panel_3.add(toolBar_1);
 		
 		btn_load = new JButton("Load tệp tin");
@@ -112,29 +138,26 @@ public class MainView extends JFrame {
 		btn_load.addActionListener(actionListener);
 		toolBar_1.add(btn_load);
 		
-		JButton btn_nhom = new JButton("Chọn nhóm");
-		btn_nhom.setIcon(new ImageIcon("D:\\CodeJava\\Lich_Thi\\imgs\\people-2-icon.png"));
-		btn_nhom.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		toolBar_1.add(btn_nhom);
-		
-		JButton btn_chon_phong = new JButton("Chọn phòng");
+		btn_chon_phong = new JButton("Chọn phòng");
+		btn_chon_phong.addActionListener(actionListener);
 		btn_chon_phong.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_chon_phong.setIcon(new ImageIcon("D:\\CodeJava\\Lich_Thi\\imgs\\Home-icon.png"));
 		toolBar_1.add(btn_chon_phong);
 		
-		JButton btn_time = new JButton("Chọn giờ thi");
+		btn_time = new JButton("Chọn giờ thi");
 		btn_time.setIcon(new ImageIcon("D:\\CodeJava\\Lich_Thi\\imgs\\time-icon.png"));
 		btn_time.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btn_time.addActionListener(actionListener);
 		toolBar_1.add(btn_time);
 			
-		JButton btn_lich = new JButton("Xếp lịch");
+		btn_lich = new JButton("Xếp lịch");
 		btn_lich.setIcon(new ImageIcon("D:\\CodeJava\\Lich_Thi\\imgs\\Calendar-icon.png"));
 		btn_lich.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar_1.add(btn_lich);
 		
 			
-		JButton btn_xuat_file = new JButton("Xuất file excel");
+		btn_xuat_file = new JButton("Xuất file excel");		
+		btn_xuat_file.addActionListener(actionListener);
 		btn_xuat_file.setIcon(new ImageIcon("D:\\CodeJava\\Lich_Thi\\imgs\\ms-excel-icon.png"));
 		btn_xuat_file.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar_1.add(btn_xuat_file);
@@ -147,41 +170,22 @@ public class MainView extends JFrame {
 		
 		table = new JTable();
 		table.setBackground(Color.WHITE);
-		table.setFont(new Font("Tahoma", Font.BOLD, 12));
-//		table.setModel(new DefaultTableModel(
-//			new Object[][] {
-//			},
-//			new String[] {
-//				"STT", "Mã học phần", 
-//				"Tên học phần", "số tín chỉ", "Số sinh viên", "Hình thức", 
-//				"Thời lượng", "Ngày thi", "Giờ thi", 
-//				"Phòng", "Lớp", "Nhóm"
-//			}
-//		));
-//		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		table.setRowHeight(30);
-//		table.getColumnModel().getColumn(0).setPreferredWidth(51);
-//		table.getColumnModel().getColumn(1).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(2).setPreferredWidth(150);
-//		table.getColumnModel().getColumn(3).setPreferredWidth(90);
-//		table.getColumnModel().getColumn(4).setPreferredWidth(80);
-//		table.getColumnModel().getColumn(5).setPreferredWidth(120);
-//		table.getColumnModel().getColumn(6).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(7).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(8).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(9).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(10).setPreferredWidth(100);
-//		table.getColumnModel().getColumn(11).setPreferredWidth(100);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(0, 0, 1193, 572);
 		panel_file.add(scrollPane);
 		
-		
+		btn_xuat_file.setEnabled(false);
+		btn_time.setEnabled(false);
+		btn_chon_phong.setEnabled(false);
+		btn_lich.setEnabled(false);
 		this.setVisible(true);
 	}
 	
 //	SimpleDateFormat date_Format = new SimpleDateFormat("dd/MM/yyyy");
+	
+	DefaultTableModel tableModel = new DefaultTableModel();
 	
 	public void showDaTa() {
 		
@@ -192,7 +196,7 @@ public class MainView extends JFrame {
 			}
 		};
 		table.setModel(tableModel);
-//		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getTableHeader().setFont( new Font( "Arial" , Font.BOLD, 14 ));
 		table.setRowHeight(30);
 		tableModel.addColumn("STT");
 		tableModel.addColumn("Mã học phần");
@@ -205,7 +209,6 @@ public class MainView extends JFrame {
 		tableModel.addColumn("Giờ thi");
 		tableModel.addColumn("Phòng");
 		tableModel.addColumn("Lớp");
-		tableModel.addColumn("Nhóm");
 		
 		List<Thong_tin> tts = thongTinService.getAllThong_tins();
 		
@@ -213,10 +216,40 @@ public class MainView extends JFrame {
 			tableModel.addRow(new Object[] {
 					tt.getsTT(), tt.getMaHP(), tt.getTenHP(), tt.getSoTin(),
 					tt.getSoSV(), tt.getHinhThuc(),tt.getThoiLuong(), tt.getNgay(),
-					tt.getGioThi(), tt.getPhong(), tt.getLop(), tt.getNhom()
+					tt.getGioThi(), tt.getPhong(), tt.getLop()
 			});
 		}
-							
+					
 	}	
+	
+	public void open() {
+		btn_xuat_file.setEnabled(true);
+		btn_time.setEnabled(true);
+		btn_chon_phong.setEnabled(true);
+		btn_lich.setEnabled(true);
+	}
+	
+	public void openFile(String file) {
+		try {
+			File path = new File(file);
+			Desktop.getDesktop().open(path);
+		}catch(IOException ioe) {
+			System.out.println(ioe);
+		}
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

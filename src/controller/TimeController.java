@@ -19,7 +19,12 @@ private TimeView timeView;
 		String cm = e.getActionCommand();
 		
 		if(cm.equals("Lấy ngày")) {
-			this.timeView.xem();
+			this.timeView.showDaTa();
+		}else if(cm.equals("Lưu")) {
+			this.timeView.CapNhatTimeDaChon();
+		}else if(cm.equals("Chọn")) {
+			this.timeView.getThong_tinDangChon();
+			this.timeView.CapNhatTimeDaChon();
 		}
 		
 	}

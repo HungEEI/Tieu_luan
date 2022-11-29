@@ -13,11 +13,9 @@ public class Thong_tin {
 	private String hinhThuc;
 	private String thoiLuong;
 	private Date ngay;
-	private Time gioThi;
+	private String gioThi;
 	private String phong;
-	private String lop;
-	private String nhom;
-	
+	private String lop;	
 		
 	public int getsTT() {
 		return sTT;
@@ -67,10 +65,10 @@ public class Thong_tin {
 	public void setNgay(Date ngay) {
 		this.ngay = ngay;
 	}
-	public Time getGioThi() {
+	public String getGioThi() {
 		return gioThi;
 	}
-	public void setGioThi(Time gioThi) {
+	public void setGioThi(String gioThi) {
 		this.gioThi = gioThi;
 	}
 	public String getPhong() {
@@ -84,12 +82,6 @@ public class Thong_tin {
 	}
 	public void setLop(String lop) {
 		this.lop = lop;
-	}
-	public String getNhom() {
-		return nhom;
-	}
-	public void setNhom(String nhom) {
-		this.nhom = nhom;
 	}
 		
 }
